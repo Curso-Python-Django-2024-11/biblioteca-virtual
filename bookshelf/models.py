@@ -46,6 +46,7 @@ class Resena(models.Model):
     usuario = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True)
     titulo = models.CharField(max_length=200)
     contenido = models.TextField()
+    visible = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.libro} - {self.titulo}"

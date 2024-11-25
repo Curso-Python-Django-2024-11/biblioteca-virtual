@@ -17,6 +17,17 @@ class LibroAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
+@admin.action(description="Censurar reseñas seleccionadas")
+def censurar(modeladmin, request, queryset):
+    queryset.update(visible=False) # Este queryset contiene las reseñas seleccionadas
+
+
+class ResenaAdmin(admin.ModelAdmin):
+    list_display = ('libro', 'usuario', 'titulo', 'visible')
+    list_filter = ('visible', 'libro', 'usuario')
+    actions = [censurar]
+
+
 admin.site.register(Autor)
 admin.site.register(Libro, LibroAdmin)
-admin.site.register(Resena)
+admin.site.register(Resena, ResenaAdmin)
