@@ -1,0 +1,47 @@
+{% extends 'bookshelf/base.html' %}
+
+{% block title %}{{ libro.titulo }}{% endblock %}
+
+{% block content %}
+<main>
+    <h1>{{ libro.titulo }}</h1>
+    <h3>Autores</h3>
+    <ul>
+    {% for autor in libro.autores.all %}
+        <li>{{ autor.nombre }} {{ autor.apellidos }}</li>
+    {% endfor %}
+    </ul>
+    <h3>Género</h3>
+    <p>{{ libro.genero }}</p>
+
+    <h2>Reseñas</h2>
+    {% for resena in resenas %}
+    <article>
+        <h3>{{ resena.titulo }}</h3>
+        <p>Por {{ resena.usuario }}</p>
+        <p>{{ resena.contenido }}</p>
+    </article>
+    {% endfor %}
+
+    <h2>Deja tu reseña</h2>
+    {% if user.is_authenticated %}
+    <form action="{% url 'libro_detail' libro.id %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit">Enviar</button>
+
+    {% if form.errors %}
+        <ul>
+        {% for field in form %}
+            {% for error in field.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+        </ul>
+    {% endif %}
+    </form>
+    {% else %}
+    <a href="{% url 'login' %}">Inicia sesión</a> para dejar tu reseña.
+    {% endif %}
+</main>
+{% endblock %}
