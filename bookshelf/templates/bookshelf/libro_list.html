@@ -1,0 +1,21 @@
+{% extends 'bookshelf/base.html' %}
+
+{% block title %}Libros{% endblock %}
+
+{% block content %}
+<h1>Libros</h1>
+
+{% for libro in object_list %}
+    <article>
+    <h2>{{ libro.titulo }}</h2>
+    <p>
+    {% for autor in libro.autores.all %}
+        <span>{{ autor.nombre }} {{ autor.apellidos }}</span>
+    {% endfor %}
+    </p>
+    <p>{{ libro.genero }}</p>
+    <p>{{ libro.bibliotecario }}</p>
+    </article>
+{% endfor %}
+
+{% endblock %}
