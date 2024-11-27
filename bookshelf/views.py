@@ -4,9 +4,10 @@ from django.views.generic import ListView
 from bookshelf.forms import FiltroLibrosForm, ResenaForm
 from bookshelf.models import Libro, Resena
 from django.db.models import Q
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
-class LibroListView(ListView):
+class LibroListView(LoginRequiredMixin, ListView):
     model = Libro
     template_name = 'bookshelf/libro_list.html'
     paginate_by = 5
@@ -36,7 +37,7 @@ class LibroListView(ListView):
             return Libro.objects.none()
     
 
-class LibroView(View):
+class LibroView(LoginRequiredMixin, View):
     def get(self, request, pk):
         libro = Libro.objects.prefetch_related('autores').get(pk=pk)
         if not libro:
