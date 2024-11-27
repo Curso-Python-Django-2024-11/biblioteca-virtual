@@ -3,11 +3,13 @@ from django.views import View
 from django.views.generic import ListView
 from bookshelf.forms import FiltroLibrosForm, ResenaForm
 from bookshelf.models import Libro, Resena
+from django.db.models import Q
 
 # Create your views here.
 class LibroListView(ListView):
     model = Libro
     template_name = 'bookshelf/libro_list.html'
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -19,16 +21,16 @@ class LibroListView(ListView):
         if form.is_valid():
             titulo = form.cleaned_data.get('titulo')
             autor = form.cleaned_data.get('autor')
-            pag = form.cleaned_data.get('pag')
+            # pag = form.cleaned_data.get('pag')
             libros = Libro.objects.prefetch_related('autores').order_by('-fecha_pub') #queryset original
             if titulo:
                 libros = libros.filter(titulo__icontains=titulo) #filtrar por titulo si se especifica
             if autor:
-                libros = libros.filter(autores__nombre__icontains=autor) # filtrar por autor si se especifica
-            if pag:
-                pag = int(self.request.GET.get('pag', 1))
-                offset = (pag - 1) * 5
-                libros = libros[offset:offset+5] #paginar
+                libros = libros.filter(Q(autores__nombre__icontains=autor) | Q(autores__apellidos__icontains=autor)) # filtrar por autor si se especifica
+            # if pag:
+            #     pag = int(self.request.GET.get('pag', 1))
+            #     offset = (pag - 1) * 5
+            #     libros = libros[offset:offset+5] #paginar
             return libros
         else:
             return Libro.objects.none()

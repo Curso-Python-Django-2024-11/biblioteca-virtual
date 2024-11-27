@@ -24,6 +24,26 @@
         <a class="btn btn-primary" href="{% url 'libro_detail' libro.id %}">Ver detalles</a>
         </article>
     {% endfor %}
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; Primeros</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Anteriores</a>
+            {% endif %}
+    
+            <span class="current">
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Siguientes</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Últimos &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
 </main>
+
+
 
 {% endblock %}

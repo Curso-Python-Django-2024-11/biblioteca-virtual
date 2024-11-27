@@ -9,4 +9,4 @@ class ResenaForm(forms.ModelForm):
 class FiltroLibrosForm(forms.Form):
     titulo = forms.CharField(max_length=100, required=False)
     autor = forms.CharField(max_length=100, required=False)
-    pag = forms.IntegerField(min_value=1, required=False, widget=forms.HiddenInput())
+    # pag = forms.IntegerField(min_value=1, required=False, widget=forms.HiddenInput())
