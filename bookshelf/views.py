@@ -5,6 +5,10 @@ from bookshelf.forms import FiltroLibrosForm, ResenaForm
 from bookshelf.models import Libro, Resena
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework import permissions, viewsets
+
+from bookshelf.serializers import LibroSerializer
+
 
 # Create your views here.
 class LibroListView(LoginRequiredMixin, ListView):
@@ -58,3 +62,8 @@ class LibroView(LoginRequiredMixin, View):
             libro = Libro.objects.prefetch_related('autores').get(pk=pk)
             resenas = Resena.objects.filter(libro=libro, visible=True)
             return render(request, 'bookshelf/libro_detail.html', {'libro': libro, 'resenas': resenas, 'form': form})
+        
+
+class LibroViewSet(viewsets.ModelViewSet):
+    queryset = Libro.objects.all()
+    serializer_class = LibroSerializer
