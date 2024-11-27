@@ -3,7 +3,7 @@
 {% block title %}{{ libro.titulo }}{% endblock %}
 
 {% block content %}
-<main>
+<main class="container-fluid">
     <h1>{{ libro.titulo }}</h1>
     <h3>Autores</h3>
     <ul>
@@ -14,18 +14,22 @@
     <h3>Género</h3>
     <p>{{ libro.genero }}</p>
 
-    <h2>Reseñas</h2>
+    <h3>Fecha de publicación</h3>
+    <p>{{ libro.fecha_pub }}</p>
+    <hr>
+
+    <h3>Reseñas</h3>
     {% for resena in resenas %}
     <article>
-        <h3>{{ resena.titulo }}</h3>
+        <h4>{{ resena.titulo }}</h4>
         <p>Por {{ resena.usuario }}</p>
         <p>{{ resena.contenido }}</p>
     </article>
     {% endfor %}
 
-    <h2>Deja tu reseña</h2>
+    <h3>Deja tu reseña</h3>
     {% if user.is_authenticated %}
-    <form action="{% url 'libro_detail' libro.id %}" method="post">
+    <form class="form" action="{% url 'libro_detail' libro.id %}" method="post">
     {% csrf_token %}
     {{ form }}
     <button type="submit">Enviar</button>

@@ -3,19 +3,27 @@
 {% block title %}Libros{% endblock %}
 
 {% block content %}
-<h1>Libros</h1>
+<main class="container-fluid">
+    <h1>Libros</h1>
+    
+    <form action="{% url 'libro_list' %}" class="form" method="get">
+        {{ form }}
+        <button class="btn btn-primary" type="submit">Buscar</button>
+    </form>
 
-{% for libro in object_list %}
-    <article>
-    <h2>{{ libro.titulo }}</h2>
-    <p>
-    {% for autor in libro.autores.all %}
-        <span>{{ autor.nombre }} {{ autor.apellidos }}</span>
+    {% for libro in object_list %}
+        <article>
+        <h2>{{ libro.titulo }}</h2>
+        <p>
+        {% for autor in libro.autores.all %}
+            <span>{{ autor.nombre }} {{ autor.apellidos }}</span>
+        {% endfor %}
+        </p>
+        <p>{{ libro.genero }}</p>
+        <p>{{ libro.bibliotecario }}</p>
+        <a class="btn btn-primary" href="{% url 'libro_detail' libro.id %}">Ver detalles</a>
+        </article>
     {% endfor %}
-    </p>
-    <p>{{ libro.genero }}</p>
-    <p>{{ libro.bibliotecario }}</p>
-    </article>
-{% endfor %}
+</main>
 
 {% endblock %}
