@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import permissions, viewsets
 from django.contrib.auth.models import User
+from rest_framework.exceptions import PermissionDenied
 
 from bookshelf.serializers import AutorSerializer, LibroSerializer, UserSerializer
 
@@ -70,13 +71,41 @@ class LibroView(LoginRequiredMixin, View):
 class AutorViewSet(viewsets.ModelViewSet):
     queryset = Autor.objects.all()
     serializer_class = AutorSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    """
+    Object-level permission to only allow owners of an object to edit it.
+    Assumes the model instance has an `owner` attribute.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        # Instance must have an attribute named `owner`.
+        return obj.bibliotecario == request.user
+    
+
 
 class LibroViewSet(viewsets.ModelViewSet):
     queryset = Libro.objects.all()
     serializer_class = LibroSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+
+    def perform_create(self, serializer):
+        if self.request.user.is_authenticated:
+            serializer.save(bibliotecario=self.request.user)
+        else:
+            raise PermissionDenied()
+
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [permissions.IsAdminUser]
 
