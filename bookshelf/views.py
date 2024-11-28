@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from rest_framework.exceptions import PermissionDenied
 
 from bookshelf.serializers import AutorSerializer, LibroSerializer, UserSerializer
-
+from drf_spectacular.utils import extend_schema
 
 # Create your views here.
 class LibroListView(LoginRequiredMixin, ListView):
@@ -95,6 +95,16 @@ class LibroViewSet(viewsets.ModelViewSet):
     queryset = Libro.objects.all()
     serializer_class = LibroSerializer
     permission_classes = [IsOwnerOrReadOnly]
+
+    @extend_schema(
+        summary="Registra un nuevo libro",
+        description="""Registra un nuevo libro en la base de datos,
+        asignando el bibliotecario que lo registra.
+        """,
+        tags=['Libros']
+    )
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         if self.request.user.is_authenticated:
