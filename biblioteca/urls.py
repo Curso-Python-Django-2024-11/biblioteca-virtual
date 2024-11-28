@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('libros/', include('bookshelf.urls')),
+    path('bookshelf/', include('bookshelf.urls')),
     path('', lambda _: redirect('libro_list', permanent=False), name='home'),
     path('api/auth/', include('rest_framework.urls')),
     path('accounts/', include('django.contrib.auth.urls')),

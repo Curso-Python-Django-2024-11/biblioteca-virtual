@@ -2,12 +2,13 @@ from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic import ListView
 from bookshelf.forms import FiltroLibrosForm, ResenaForm
-from bookshelf.models import Libro, Resena
+from bookshelf.models import Autor, Libro, Resena
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import permissions, viewsets
+from django.contrib.auth.models import User
 
-from bookshelf.serializers import LibroSerializer
+from bookshelf.serializers import AutorSerializer, LibroSerializer, UserSerializer
 
 
 # Create your views here.
@@ -64,6 +65,18 @@ class LibroView(LoginRequiredMixin, View):
             return render(request, 'bookshelf/libro_detail.html', {'libro': libro, 'resenas': resenas, 'form': form})
         
 
+# Vistas de la API
+
+class AutorViewSet(viewsets.ModelViewSet):
+    queryset = Autor.objects.all()
+    serializer_class = AutorSerializer
+
 class LibroViewSet(viewsets.ModelViewSet):
     queryset = Libro.objects.all()
     serializer_class = LibroSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
